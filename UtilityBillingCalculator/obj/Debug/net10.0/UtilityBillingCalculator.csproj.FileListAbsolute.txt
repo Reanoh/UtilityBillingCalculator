@@ -1,0 +1,15 @@
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/bin/Debug/net10.0/UtilityBillingCalculator
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/bin/Debug/net10.0/UtilityBillingCalculator.deps.json
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/bin/Debug/net10.0/UtilityBillingCalculator.runtimeconfig.json
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/bin/Debug/net10.0/UtilityBillingCalculator.dll
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/bin/Debug/net10.0/UtilityBillingCalculator.pdb
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.AssemblyInfoInputs.cache
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.AssemblyInfo.cs
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.csproj.CoreCompileInputs.cache
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.sourcelink.json
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.dll
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/refint/UtilityBillingCalculator.dll
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.pdb
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/UtilityBillingCalculator.genruntimeconfig.cache
+/workspaces/UtilityBillingCalculator/UtilityBillingCalculator/obj/Debug/net10.0/ref/UtilityBillingCalculator.dll
