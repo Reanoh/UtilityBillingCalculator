@@ -1,0 +1,138 @@
+@model UtilityBillingCalculator.ViewModels.BillingViewModel
+
+@{
+    ViewData["Title"] = "Utility Billing Calculator";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Utility Billing Calculator</h2>
+                </div>
+                
+                <div class="card-body">
+                    <form asp-action="Index" method="post">
+                        @Html.AntiForgeryToken()
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="form-group mb-4">
+                            <label asp-for="WaterUsage" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <input asp-for="WaterUsage" class="form-control" placeholder="Enter water usage in cubic meters" />
+                                <span class="input-group-text">m³</span>
+                            </div>
+                            <span asp-validation-for="WaterUsage" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-calculator"></i> Calculate Bill
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.HasResults)
+                    {
+                        <hr class="my-4" />
+                        
+                        <div class="bill-summary">
+                            <h4 class="text-center mb-4">Bill Summary</h4>
+                            
+                            <div class="alert alert-info text-center">
+                                <strong>Total Water Usage:</strong> @Model.TotalUsage?.ToString("F2") m³
+                            </div>
+                            
+                            <h5 class="mt-4">Charge Breakdown:</h5>
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tier</th>
+                                        <th>Rate</th>
+                                        <th>Units</th>
+                                        <th>Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Tier1Units > 0)
+                                    {
+                                        <tr>
+                                            <td>Tier 1</td>
+                                            <td>0-10 units @@ R5/unit</td>
+                                            <td>@Model.Tier1Units?.ToString("F2")</td>
+                                            <td>R @Model.Tier1Cost?.ToString("F2")</td>
+                                        </tr>
+                                    }
+                                    @if (Model.Tier2Units > 0)
+                                    {
+                                        <tr>
+                                            <td>Tier 2</td>
+                                            <td>11-30 units @@ R8/unit</td>
+                                            <td>@Model.Tier2Units?.ToString("F2")</td>
+                                            <td>R @Model.Tier2Cost?.ToString("F2")</td>
+                                        </tr>
+                                    }
+                                    @if (Model.Tier3Units > 0)
+                                    {
+                                        <tr>
+                                            <td>Tier 3</td>
+                                            <td>31+ units @@ R12/unit</td>
+                                            <td>@Model.Tier3Units?.ToString("F2")</td>
+                                            <td>R @Model.Tier3Cost?.ToString("F2")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            
+                            <div class="card bg-light mt-4">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Subtotal:</strong>
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            R @Model.Subtotal?.ToString("F2")
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mt-2">
+                                        <div class="col-md-6">
+                                            <strong>Surcharge (10%):</strong>
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            @if (Model.SurchargeApplied)
+                                            {
+                                                <span>R @Model.Surcharge?.ToString("F2")</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Not applicable (usage ≤ 50 units)</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    
+                                    <hr />
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong class="fs-5">TOTAL AMOUNT DUE:</strong>
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            <strong class="fs-5 text-primary">R @Model.Total?.ToString("F2")</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
