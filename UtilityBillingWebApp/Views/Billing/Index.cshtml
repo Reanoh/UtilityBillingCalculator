@@ -1,4 +1,4 @@
-@model UtilityBillingCalculator.ViewModels.BillingViewModel
+@model UtilityBillingWebApp.ViewModels.BillingViewModel
 
 @{
     ViewData["Title"] = "Utility Billing Calculator";
@@ -9,7 +9,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white text-center">
-                    <h2>Utility Billing Calculator</h2>
+                    <h2>Utility Billing Calculator with Forecasting</h2>
                 </div>
                 
                 <div class="card-body">
@@ -18,18 +18,80 @@
                         
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         
-                        <div class="form-group mb-4">
-                            <label asp-for="WaterUsage" class="form-label fw-bold"></label>
-                            <div class="input-group">
-                                <input asp-for="WaterUsage" class="form-control" placeholder="Enter water usage in cubic meters" />
-                                <span class="input-group-text">m³</span>
+                        <!-- Current Usage Section -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">Current Month Usage</h5>
                             </div>
-                            <span asp-validation-for="WaterUsage" class="text-danger"></span>
+                            <div class="card-body">
+                                <div class="form-group mb-3">
+                                    <label asp-for="WaterUsage" class="form-label fw-bold"></label>
+                                    <div class="input-group">
+                                        <input asp-for="WaterUsage" class="form-control" placeholder="Enter current water usage" />
+                                        <span class="input-group-text">m³</span>
+                                    </div>
+                                    <span asp-validation-for="WaterUsage" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Historical Usage Section for Forecasting -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0">Historical Usage (Optional - for forecasting)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Usage6MonthsAgo" class="form-label"></label>
+                                        <div class="input-group">
+                                            <input asp-for="Usage6MonthsAgo" class="form-control" />
+                                            <span class="input-group-text">m³</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Usage5MonthsAgo" class="form-label"></label>
+                                        <div class="input-group">
+                                            <input asp-for="Usage5MonthsAgo" class="form-control" />
+                                            <span class="input-group-text">m³</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Usage4MonthsAgo" class="form-label"></label>
+                                        <div class="input-group">
+                                            <input asp-for="Usage4MonthsAgo" class="form-control" />
+                                            <span class="input-group-text">m³</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Usage3MonthsAgo" class="form-label"></label>
+                                        <div class="input-group">
+                                            <input asp-for="Usage3MonthsAgo" class="form-control" />
+                                            <span class="input-group-text">m³</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Usage2MonthsAgo" class="form-label"></label>
+                                        <div class="input-group">
+                                            <input asp-for="Usage2MonthsAgo" class="form-control" />
+                                            <span class="input-group-text">m³</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="UsageLastMonth" class="form-label"></label>
+                                        <div class="input-group">
+                                            <input asp-for="UsageLastMonth" class="form-control" />
+                                            <span class="input-group-text">m³</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Enter at least 2 months of historical data to enable forecasting.</small>
+                            </div>
                         </div>
                         
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-calculator"></i> Calculate Bill
+                                <i class="bi bi-calculator"></i> Calculate Bill & Forecast
                             </button>
                         </div>
                     </form>
@@ -38,11 +100,12 @@
                     {
                         <hr class="my-4" />
                         
+                        <!-- Current Bill Summary -->
                         <div class="bill-summary">
-                            <h4 class="text-center mb-4">Bill Summary</h4>
+                            <h4 class="text-center mb-4">Current Bill Summary</h4>
                             
                             <div class="alert alert-info text-center">
-                                <strong>Total Water Usage:</strong> @Model.TotalUsage?.ToString("F2") m³
+                                <strong>Current Water Usage:</strong> @Model.TotalUsage?.ToString("F2") m³
                             </div>
                             
                             <h5 class="mt-4">Charge Breakdown:</h5>
@@ -125,7 +188,94 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- PDF Download Button (MOVED HERE - outside any @@section) -->
+                            <!-- PDF Download Button -->
+@if (Model.ShowDownloadButton)
+{
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <button type="button" 
+                    class="btn btn-success btn-lg" 
+                    onclick="downloadPdf()"
+                    @* IMPORTANT: This prevents any form submission *@
+                    form="none"
+            >
+                <i class="bi bi-file-pdf"></i> Download PDF Invoice
+            </button>
+            <small class="d-block text-muted mt-2">Bill ID: @Model.BillId | Generated: @Model.GenerationDate.ToString("dd MMM yyyy HH:mm")</small>
+        </div>
+    </div>
+}
                         </div>
+
+                        <!-- Forecasting Results -->
+                        @if (Model.HasForecast)
+                        {
+                            <hr class="my-4" />
+                            
+                            <div class="forecast-summary">
+                                <h4 class="text-center mb-4">Usage Forecast</h4>
+                                
+                                <div class="card border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0">Next Month Prediction</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="text-center p-3 border rounded">
+                                                    <h6 class="text-muted">Predicted Usage</h6>
+                                                    <h3 class="text-primary">@Model.PredictedNextUsage?.ToString("F2") m³</h3>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-center p-3 border rounded">
+                                                    <h6 class="text-muted">Predicted Bill</h6>
+                                                    <h3 class="text-success">R @Model.PredictedNextBill?.ToString("F2")</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mt-4">
+                                            <div class="col-12">
+                                                <div class="alert @(Model.TrendDirection == "Increasing" ? "alert-warning" : 
+                                                                   Model.TrendDirection == "Decreasing" ? "alert-success" : 
+                                                                   "alert-info")">
+                                                    <strong>Trend Analysis:</strong> 
+                                                    Usage is @Model.TrendDirection.ToLower() 
+                                                    @if (Model.GrowthRate.HasValue)
+                                                    {
+                                                        <span>(@(Model.GrowthRate.Value.ToString("F2")) m³/month average change)</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @if (Model.HistoricalUsages.Count > 0)
+                                        {
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <h6>Historical Data Used:</h6>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        @foreach (var usage in Model.HistoricalUsages)
+                                                        {
+                                                            <div class="text-center">
+                                                                <small class="d-block text-muted">@usage.ToString("F1") m³</small>
+                                                            </div>
+                                                        }
+                                                        <div class="text-center">
+                                                            <strong class="d-block text-primary">→ @Model.PredictedNextUsage?.ToString("F1") m³</strong>
+                                                            <small class="text-muted">(predicted)</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     }
                 </div>
             </div>
@@ -133,6 +283,37 @@
     </div>
 </div>
 
+<!-- SINGLE Scripts section at the bottom of the file -->
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+    function downloadPdf() {
+        // Prevent any default behavior
+        event?.preventDefault();
+        
+        // Get all the values from the current page
+        var url = '@Url.Action("DownloadPdf", "Billing")' +
+            '?billId=@Model.BillId' +
+            '&waterUsage=@Model.WaterUsage' +
+            '&totalUsage=@Model.TotalUsage' +
+            '&tier1Units=@Model.Tier1Units' +
+            '&tier1Cost=@Model.Tier1Cost' +
+            '&tier2Units=@Model.Tier2Units' +
+            '&tier2Cost=@Model.Tier2Cost' +
+            '&tier3Units=@Model.Tier3Units' +
+            '&tier3Cost=@Model.Tier3Cost' +
+            '&subtotal=@Model.Subtotal' +
+            '&surcharge=@Model.Surcharge' +
+            '&surchargeApplied=@Model.SurchargeApplied' +
+            '&total=@Model.Total' +
+            '&generationDate=@Model.GenerationDate.ToString("yyyy-MM-ddTHH:mm:ss")';
+        
+        // Open in new tab
+        window.open(url, '_blank');
+        
+        // Return false to prevent any default behavior
+        return false;
+    }
+</script>
 }
